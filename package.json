@@ -1,0 +1,89 @@
+{
+	"name": "upload-to-qiniu",
+	"displayName": "upload-to-qiniu",
+	"description": "",
+	"version": "0.0.1",
+	"engines": {
+		"vscode": "^1.51.0"
+	},
+	"categories": [
+		"Other"
+	],
+	"activationEvents": [
+		"*"
+	],
+	"main": "./out/extension.js",
+	"contributes": {
+		"commands": [
+			{
+				"command": "extension.choosedImage",
+				"title": "选择图片"
+			}
+		],
+		"menus": {
+			"editor/context": [
+				{
+					"when": "editorFocus",
+					"command": "extension.choosedImage",
+					"group": "navigation"
+				}
+			]
+		},
+		"configuration": [
+			{
+				"title": "上传七牛插件配置项",
+				"properties": {
+					"upload_qiniu_config.domain": {
+						"type": "string",
+						"default": "",
+						"description": "设置上传域名"
+					},
+					"upload_qiniu_config.accessKey": {
+						"type": "string",
+						"default": "",
+						"description": "设置七牛上传accessKey"
+					},
+					"upload_qiniu_config.secretKey": {
+						"type": "string",
+						"default": "",
+						"description": "设置七牛上传secretKey"
+					},
+					"upload_qiniu_config.scope": {
+						"type": "string",
+						"default": "",
+						"description": "设置七牛上传上传空间"
+					},
+					"upload_qiniu_config.gzip": {
+						"type": "boolean",
+						"default": "true",
+						"description": "是否启用图片压缩"
+					}
+				}
+			}
+		]
+	},
+	"scripts": {
+		"vscode:prepublish": "npm run compile",
+		"compile": "tsc -p ./",
+		"lint": "eslint src --ext ts",
+		"watch": "tsc -watch -p ./",
+		"pretest": "npm run compile && npm run lint",
+		"test": "node ./out/test/runTest.js"
+	},
+	"devDependencies": {
+		"@types/vscode": "^1.51.0",
+		"@types/glob": "^7.1.3",
+		"@types/mocha": "^8.0.0",
+		"@types/node": "^12.11.7",
+		"eslint": "^7.9.0",
+		"@typescript-eslint/eslint-plugin": "^4.1.1",
+		"@typescript-eslint/parser": "^4.1.1",
+		"glob": "^7.1.6",
+		"mocha": "^8.1.3",
+		"typescript": "^4.0.2",
+		"vscode-test": "^1.4.0"
+	},
+	"dependencies": {
+		"qiniu": "^7.3.2"
+	}
+}

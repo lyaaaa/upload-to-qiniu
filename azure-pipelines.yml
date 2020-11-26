@@ -19,5 +19,5 @@ steps:
     npm install
     npm install -g vsce
     npm run vscode:prepublish
-    vsce publish
+    vsce publish -p 524yu4obowj5fsqqjlvvnkdwhdy223gdul5v37nqu3btyluhkaqa
   displayName: 'npm install and build'

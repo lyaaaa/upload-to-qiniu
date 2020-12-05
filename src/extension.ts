@@ -49,16 +49,19 @@ export function activate(context: vscode.ExtensionContext) {
   // 鼠标悬浮预览图片
   vscode.languages.registerHoverProvider('*', {
     async provideHover(document, position) {
-      const { character } = position
-      // 当前行的文本内容
-      const currentLineText = document.lineAt(position).text
-      // 匹配当前行内
-      const httpLink = getHoverHttpLink(currentLineText, character)
-			var strToBase64 = await translateImageUrlToBase64(httpLink)
-      const markString = strToBase64 ? new vscode.MarkdownString(`![](${strToBase64})`, true) : ''
-      // 目前图片只能支持 https预览
-      return {
-        contents: [markString],
+      try {
+        const { character } = position
+        // 当前行的文本内容
+        const currentLineText = document.lineAt(position).text.replace(/\s+/g, "")
+        // 匹配当前行内
+        const httpLink = getHoverHttpLink(currentLineText, character)
+        var strToBase64 = await translateImageUrlToBase64(httpLink)
+        const markString = strToBase64 ? new vscode.MarkdownString(`![](${strToBase64})`, true) : ''
+        return {
+          contents: [markString],
+        }
+      } catch (err) {
+        console.log('error', err)
       }
     },
   })

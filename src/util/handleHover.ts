@@ -96,7 +96,6 @@ export const translateImageUrlToBase64 = (url: string): Promise<string> => {
         const contentType = res.headers['content-type']
         // 请求为图片
         if (contentType && contentType.includes('image')) {
-          // url = addImageCropParam(url, 100)
           var chunks: Array<any> = [] //用于保存网络请求不断加载传输的缓冲数据
           var size = 0 //保存缓冲数据的总长度
           res.on('data', function (chunk: any) {

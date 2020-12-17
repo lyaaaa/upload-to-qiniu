@@ -2,6 +2,7 @@ const qiniu = require('qiniu')
 const imagemin = require('imagemin')
 const imageminPngquant = require('imagemin-pngquant')
 const imageminJpegtran = require('imagemin-jpegtran')
+import * as vscode from 'vscode'
 import { getBufferFromFile, bufferToStream } from './base'
 
 // 获取七牛token
@@ -51,12 +52,16 @@ export const upImageToQiniu = async (
     putExtra,
     function (respErr: any, respBody: any, respInfo: any) {
       if (respErr) {
+        vscode.window.showInformationMessage('respErr', JSON.stringify(respErr))
         throw respErr
       }
 
       if (respInfo.statusCode === 200) {
+        vscode.window.showInformationMessage('uploaded', JSON.stringify(respBody))
         const url = upConfig.domain + '/' + respBody.key
         cb(url)
+      } else {
+        vscode.window.showInformationMessage('uploaded error', JSON.stringify(respBody))
       }
     }
   )

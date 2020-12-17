@@ -10,7 +10,7 @@
 	"categories": [
 		"Other"
 	],
-	"icon": "https://github.com/lyaaaa/upload-to-qiniu/images/icon.png",
+	"icon": "images/icon.png",
 	"activationEvents": [
 		"*"
 	],

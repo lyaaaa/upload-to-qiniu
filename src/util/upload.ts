@@ -75,7 +75,6 @@ const imageGzip = async (loaclFile: string): Promise<any> => {
       ],
     })
   } catch (err) {
-    console.log('error', err)
     res = null
   }
   return res

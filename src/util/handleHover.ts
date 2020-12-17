@@ -4,31 +4,18 @@ import * as http from 'http'
 // 获取http链接 在字符串中的位置
 const getHttpLinkPosition = (content: string): Array<any> => {
   const regx = /['"][http(s)://](\S*)['"]/g
-  const arr = []
-  let str = content
-  let textStart = 0
-  while (str) {
-    let httpIndex = str.indexOf('http')
-    if (httpIndex === 1) {
-      // 'http || "http
-      let resREGX = str.match(regx)
-      if (resREGX) {
-        arr.push({
-          start: textStart,
-          end: textStart + resREGX[0].length,
-          value: resREGX[0],
-          length: resREGX[0].length,
-        })
-        str = str.substring(resREGX[0].length)
-        textStart += resREGX[0].length
-      }
-    } else if (httpIndex > -1) {
-      str = str.substring(httpIndex - 1)
-      textStart += httpIndex - 1
-    } else {
-      str = str.substring(str.length)
-    }
-  }
+  // @ts-ignore
+  const matchArr = [...content.matchAll(regx)]
+  const arr: any[] = []
+  matchArr.forEach(item => {
+    const url = filterHttpLink(item[0])
+    arr.push({
+      start: item.index - 1,
+      end: item.index - 1 + url.length,
+      value: url,
+      length: url.length
+    })
+  })
   return arr
 }
 
@@ -52,8 +39,7 @@ export const getHoverHttpLink = (content: string, position: number): string => {
       }
     })
   }
-  // 如果有链接，去除链接两边的引号后返回
-  return filterHttpLink(link)
+  return link
 }
 
 // 图片添加裁剪参数

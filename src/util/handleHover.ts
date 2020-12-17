@@ -3,7 +3,7 @@ import * as http from 'http'
 
 // 获取http链接 在字符串中的位置
 const getHttpLinkPosition = (content: string): Array<any> => {
-  const regx = /['"][http(s)://](\S*)['"]/g
+  const regx = /["|'][http(s)://](.*?)["|']/g
   // @ts-ignore
   const matchArr = [...content.matchAll(regx)]
   const arr: any[] = []

@@ -2,7 +2,7 @@
 	"name": "upload-to-qiniu",
 	"displayName": "upload-to-qiniu",
 	"description": "upload image to qiniu",
-	"version": "0.0.6",
+	"version": "0.0.7",
 	"publisher": "lyaaaa",
 	"engines": {
 		"vscode": "^1.51.0"
@@ -10,6 +10,7 @@
 	"categories": [
 		"Other"
 	],
+	"icon": "https://lyaaaa.gallerycdn.vsassets.io/extensions/lyaaaa/61269046",
 	"activationEvents": [
 		"*"
 	],

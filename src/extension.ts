@@ -52,7 +52,7 @@ export function activate(context: vscode.ExtensionContext) {
       try {
         const { character } = position
         // 当前行的文本内容
-        const currentLineText = document.lineAt(position).text.replace(/\s+/g, "")
+        const currentLineText = document.lineAt(position).text
         // 匹配当前行内
         const httpLink = getHoverHttpLink(currentLineText, character)
         var strToBase64 = await translateImageUrlToBase64(httpLink)
@@ -74,20 +74,11 @@ function addImageUrlToEditor(url: string) {
   if (!editor) {
     return
   }
-  const { start, end, active } = editor.selection
-  if (start.line === end.line && start.character === end.character) {
-    // 在光标位置插入内容
-    const activePosition = active
-    editor.edit((editBuilder) => {
-      editBuilder.insert(activePosition, url)
-    })
-  } else {
-    // 替换内容
-    const selection = editor.selection
-    editor.edit((editBuilder) => {
-      editBuilder.replace(selection, url)
-    })
-  }
+  // 替换内容
+  const selection = editor.selection
+  editor.edit((editBuilder) => {
+    editBuilder.replace(selection, url)
+  })
 }
 
 // this method is called when your extension is deactivated

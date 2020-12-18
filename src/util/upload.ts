@@ -32,37 +32,24 @@ export const upImageToQiniu = async (
   cb: { (res: any): void; (arg0: any): void },
   upConfig: QiNiuUpConfig
 ) => {
-  fs.exists(loaclFile, function(exists: any) {
-    if (exists) {
-      vscode.window.showInformationMessage(`loaclFile 文件存在`)
-    } else {
-      vscode.window.showInformationMessage(`loaclFile 文件不存在`)
-    }
-  })
+  // 将图片路径统一为 xx/xxx
   const filePathArr = loaclFile.split(path.sep)
   loaclFile = path.posix.join(...filePathArr)
+
   const config = new qiniu.conf.Config()
   const formUploader = new qiniu.form_up.FormUploader(config)
   const putExtra = new qiniu.form_up.PutExtra()
   const token = getToken(upConfig.accessKey, upConfig.secretKey, upConfig.scope)
   let gzipImage
-  // if (upConfig.gzip) {
-  //   gzipImage = await imageGzip(loaclFile)
-  // }
+  if (upConfig.gzip) {
+    gzipImage = await imageGzip(loaclFile)
+  }
   // 获取当前时间戳
   var key = new Date().getTime()
   // 上传调用方法
   const uploadFnName = gzipImage ? 'putStream' : 'putFile'
   // 上传内容
   const uploadItem = gzipImage ? bufferToStream(gzipImage) : path.normalize(loaclFile)
-  vscode.window.showInformationMessage(`上传图片路径:${uploadItem}`)
-  fs.exists(uploadItem, function(exists: any) {
-    if (exists) {
-      vscode.window.showInformationMessage(`文件存在`)
-    } else {
-      vscode.window.showInformationMessage(`文件不存在`)
-    }
-  })
   // 七牛上传
   formUploader[uploadFnName](
     token,
@@ -71,16 +58,14 @@ export const upImageToQiniu = async (
     putExtra,
     function (respErr: any, respBody: any, respInfo: any) {
       if (respErr) {
-        vscode.window.showInformationMessage('respErr', JSON.stringify(respErr))
         throw respErr
       }
 
       if (respInfo.statusCode === 200) {
-        vscode.window.showInformationMessage('uploaded', JSON.stringify(respBody))
         const url = upConfig.domain + '/' + respBody.key
         cb(url)
       } else {
-        vscode.window.showInformationMessage('uploaded error', JSON.stringify(respBody))
+        vscode.window.showInformationMessage(`上传失败: ${respInfo.statusCode}`)
       }
     }
   )
@@ -99,6 +84,7 @@ const imageGzip = async (loaclFile: string): Promise<any> => {
       ],
     })
   } catch (err) {
+    vscode.window.showInformationMessage('图片压缩失败')
     res = null
   }
   return res

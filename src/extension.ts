@@ -33,7 +33,11 @@ export function activate(context: vscode.ExtensionContext) {
         gzip: qiniuConfig.gzip,
         scope: qiniuConfig.scope,
       }
-      const loaclFile = uri[0].path
+      vscode.window.showInformationMessage(`uri: ${uri}, ${JSON.stringify(uri)}`)
+      vscode.window.showInformationMessage(`uri[0]: ${JSON.stringify(uri[0])}`)
+      vscode.window.showInformationMessage(`uri[0]path: ${JSON.stringify(uri[0].path)}`)
+      console.log('uri', uri)
+      const loaclFile = uri[0].fsPath
       upImageToQiniu(
         loaclFile,
         (res: string) => {

@@ -1,3 +1,4 @@
+const path = require('path')
 const qiniu = require('qiniu')
 const imagemin = require('imagemin')
 const imageminPngquant = require('imagemin-pngquant')
@@ -30,6 +31,8 @@ export const upImageToQiniu = async (
   cb: { (res: any): void; (arg0: any): void },
   upConfig: QiNiuUpConfig
 ) => {
+  const filePathArr = loaclFile.split(path.sep)
+  loaclFile = path.join(...filePathArr)
   const config = new qiniu.conf.Config()
   const formUploader = new qiniu.form_up.FormUploader(config)
   const putExtra = new qiniu.form_up.PutExtra()

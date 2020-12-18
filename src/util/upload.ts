@@ -32,21 +32,22 @@ export const upImageToQiniu = async (
   upConfig: QiNiuUpConfig
 ) => {
   const filePathArr = loaclFile.split(path.sep)
-  loaclFile = path.join(...filePathArr)
+  loaclFile = path.posix.join(...filePathArr)
   const config = new qiniu.conf.Config()
   const formUploader = new qiniu.form_up.FormUploader(config)
   const putExtra = new qiniu.form_up.PutExtra()
   const token = getToken(upConfig.accessKey, upConfig.secretKey, upConfig.scope)
   let gzipImage
-  if (upConfig.gzip) {
-    gzipImage = await imageGzip(loaclFile)
-  }
+  // if (upConfig.gzip) {
+  //   gzipImage = await imageGzip(loaclFile)
+  // }
   // 获取当前时间戳
   var key = new Date().getTime()
   // 上传调用方法
   const uploadFnName = gzipImage ? 'putStream' : 'putFile'
   // 上传内容
   const uploadItem = gzipImage ? bufferToStream(gzipImage) : loaclFile
+  vscode.window.showInformationMessage(`上传图片路径${uploadItem}`)
   // 七牛上传
   formUploader[uploadFnName](
     token,

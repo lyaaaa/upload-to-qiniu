@@ -1,4 +1,5 @@
 const path = require('path')
+const fs = require('fs')
 const qiniu = require('qiniu')
 const imagemin = require('imagemin')
 const imageminPngquant = require('imagemin-pngquant')
@@ -31,6 +32,13 @@ export const upImageToQiniu = async (
   cb: { (res: any): void; (arg0: any): void },
   upConfig: QiNiuUpConfig
 ) => {
+  fs.exists(loaclFile, function(exists: any) {
+    if (exists) {
+      vscode.window.showInformationMessage(`loaclFile 文件存在`)
+    } else {
+      vscode.window.showInformationMessage(`loaclFile 文件不存在`)
+    }
+  })
   const filePathArr = loaclFile.split(path.sep)
   loaclFile = path.posix.join(...filePathArr)
   const config = new qiniu.conf.Config()
@@ -46,8 +54,15 @@ export const upImageToQiniu = async (
   // 上传调用方法
   const uploadFnName = gzipImage ? 'putStream' : 'putFile'
   // 上传内容
-  const uploadItem = gzipImage ? bufferToStream(gzipImage) : loaclFile
-  vscode.window.showInformationMessage(`上传图片路径${uploadItem}`)
+  const uploadItem = gzipImage ? bufferToStream(gzipImage) : path.normalize(loaclFile)
+  vscode.window.showInformationMessage(`上传图片路径:${uploadItem}`)
+  fs.exists(uploadItem, function(exists: any) {
+    if (exists) {
+      vscode.window.showInformationMessage(`文件存在`)
+    } else {
+      vscode.window.showInformationMessage(`文件不存在`)
+    }
+  })
   // 七牛上传
   formUploader[uploadFnName](
     token,

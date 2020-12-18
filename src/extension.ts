@@ -34,7 +34,6 @@ export function activate(context: vscode.ExtensionContext) {
         scope: qiniuConfig.scope,
       }
       const loaclFile = uri[0].path
-      vscode.window.showInformationMessage('loaclFile', loaclFile)
       upImageToQiniu(
         loaclFile,
         (res: string) => {

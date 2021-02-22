@@ -7,6 +7,7 @@ import { getHoverHttpLink, translateImageUrlToBase64 } from './util/handleHover'
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
 export function activate(context: vscode.ExtensionContext) {
+  console.log('upload-to-qiniu activate')
   // Use the console to output diagnostic information (console.log) and errors (console.error)
   // This line of code will only be executed once when your extension is activated
   // The command has been defined in the package.json file
@@ -15,6 +16,7 @@ export function activate(context: vscode.ExtensionContext) {
   let texteditor = vscode.commands.registerTextEditorCommand(
     'extension.checkedImage',
     async (textEditor, edit, args) => {
+      console.log('upload-to-qiniu activate extension.checkedImage')
       const qiniuConfig = vscode.workspace.getConfiguration('upload_qiniu_config')
       const uri = await vscode.window.showOpenDialog({
         canSelectFolders: false,
@@ -34,6 +36,7 @@ export function activate(context: vscode.ExtensionContext) {
         scope: qiniuConfig.scope,
       }
       const localFile = uri[0].fsPath
+      console.log('loaclFile')
       let url = await handleImageToQiniu(localFile, upConfig)
       // 将图片链接写入编辑器
       addImageUrlToEditor(url)

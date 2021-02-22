@@ -2,10 +2,10 @@
 	"name": "upload-to-qiniu",
 	"displayName": "upload-to-qiniu",
 	"description": "upload image to qiniu",
-	"version": "0.1.2",
+	"version": "0.1.3",
 	"publisher": "lyaaaa",
 	"engines": {
-		"vscode": "^1.51.0"
+		"vscode": "^1.50.0"
 	},
 	"categories": [
 		"Other"

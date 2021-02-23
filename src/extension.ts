@@ -1,7 +1,7 @@
 // The module 'vscode' contains the VS Code extensibility API
 // Import the module and reference it with the alias vscode in your code below
 import * as vscode from 'vscode'
-import { upImageToQiniu } from './util/upload'
+import { handleImageToQiniu } from './util/upload'
 import { getHoverHttpLink, translateImageUrlToBase64 } from './util/handleHover'
 
 // this method is called when your extension is activated
@@ -13,7 +13,7 @@ export function activate(context: vscode.ExtensionContext) {
   // Now provide the implementation of the command with registerCommand
   // The commandId parameter must match the command field in package.json
   let texteditor = vscode.commands.registerTextEditorCommand(
-    'extension.choosedImage',
+    'extension.checkedImage',
     async (textEditor, edit, args) => {
       const qiniuConfig = vscode.workspace.getConfiguration('upload_qiniu_config')
       const uri = await vscode.window.showOpenDialog({
@@ -33,16 +33,10 @@ export function activate(context: vscode.ExtensionContext) {
         gzip: qiniuConfig.gzip,
         scope: qiniuConfig.scope,
       }
-      const loaclFile = uri[0].fsPath
-      upImageToQiniu(
-        loaclFile,
-        (res: string) => {
-          let url = res
-          // 将图片链接写入编辑器
-          addImageUrlToEditor(url)
-        },
-        upConfig
-      )
+      const localFile = uri[0].fsPath
+      let url = await handleImageToQiniu(localFile, upConfig)
+      // 将图片链接写入编辑器
+      addImageUrlToEditor(url)
     }
   )
 

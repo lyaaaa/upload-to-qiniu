@@ -1,7 +1,7 @@
 // The module 'vscode' contains the VS Code extensibility API
 // Import the module and reference it with the alias vscode in your code below
 import * as vscode from 'vscode'
-import { handleImageToQiniu } from './util/upload'
+import { handleImageToQiniu, upImageToQiniu } from './util/upload'
 import { getHoverHttpLink, translateImageUrlToBase64 } from './util/handleHover'
 
 // this method is called when your extension is activated
@@ -36,19 +36,18 @@ export function activate(context: vscode.ExtensionContext) {
         scope: qiniuConfig.scope,
       }
       const localFile = uri[0].fsPath
-      console.log('loaclFile')
-      let url = await handleImageToQiniu(localFile, upConfig)
+      // let url = await handleImageToQiniu(localFile, upConfig)
       // 将图片链接写入编辑器
-      addImageUrlToEditor(url)
-      // upImageToQiniu(
-      //   localFile,
-      //   (res: string) => {
-      //     let url = res
-      //     // 将图片链接写入编辑器
-      //     addImageUrlToEditor(url)
-      //   },
-      //   upConfig
-      // )
+      // addImageUrlToEditor(url)
+      upImageToQiniu(
+        localFile,
+        (res: string) => {
+          let url = res
+          // 将图片链接写入编辑器
+          addImageUrlToEditor(url)
+        },
+        upConfig
+      )
     }
   )
 

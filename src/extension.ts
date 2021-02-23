@@ -13,7 +13,7 @@ export function activate(context: vscode.ExtensionContext) {
   // Now provide the implementation of the command with registerCommand
   // The commandId parameter must match the command field in package.json
   let texteditor = vscode.commands.registerTextEditorCommand(
-    'extension.checkedImage',
+    'extension.choosedImage',
     async (textEditor, edit, args) => {
       const qiniuConfig = vscode.workspace.getConfiguration('upload_qiniu_config')
       const uri = await vscode.window.showOpenDialog({

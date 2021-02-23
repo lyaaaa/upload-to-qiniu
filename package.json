@@ -2,7 +2,7 @@
 	"name": "upload-to-qiniu",
 	"displayName": "upload-to-qiniu",
 	"description": "upload image to qiniu",
-	"version": "0.2.2",
+	"version": "0.2.3",
 	"publisher": "lyaaaa",
 	"engines": {
 		"vscode": "^1.51.0"
@@ -18,7 +18,7 @@
 	"contributes": {
 		"commands": [
 			{
-				"command": "extension.checkedImage",
+				"command": "extension.choosedImage",
 				"title": "选择图片"
 			}
 		],
@@ -26,7 +26,7 @@
 			"editor/context": [
 				{
 					"when": "editorFocus",
-					"command": "extension.checkedImage",
+					"command": "extension.choosedImage",
 					"group": "navigation"
 				}
 			]

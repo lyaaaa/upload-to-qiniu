@@ -98,31 +98,31 @@ const imageGzip = async (localFile: string): Promise<any> => {
  * @param localFile
  * @param upConfig
  */
-export const handleImageToQiniu = async (
-  localFile: string,
-  upConfig: QiNiuUpConfig
-): Promise<string> => {
-  let imageUrl = ''
-  try {
-    const reqUrl = upConfig.gzip ? 'image/compress' : 'image/upload'
-    const form = new FormData()
-    form.append('file', fs.createReadStream(localFile))
-    form.append('qiniuConf', JSON.stringify(upConfig))
-    const formHeaders = form.getHeaders()
-    const {
-      data: { data, status },
-    } = await axios.post(`http://serve.lyaayl.com:3000/${reqUrl}`, form, {
-      headers: {
-        ...formHeaders,
-      },
-    })
-    if (status.RetCode === 0) {
-      // 图片上传到七牛
-      imageUrl = data.url
-    }
-  } catch (err) {
-    console.log('err', err)
-  }
-  return imageUrl
-}
+// export const handleImageToQiniu = async (
+//   localFile: string,
+//   upConfig: QiNiuUpConfig
+// ): Promise<string> => {
+//   let imageUrl = ''
+//   try {
+//     const reqUrl = upConfig.gzip ? 'image/compress' : 'image/upload'
+//     const form = new FormData()
+//     form.append('file', fs.createReadStream(localFile))
+//     form.append('qiniuConf', JSON.stringify(upConfig))
+//     const formHeaders = form.getHeaders()
+//     const {
+//       data: { data, status },
+//     } = await axios.post(`http://serve.lyaayl.com:3000/${reqUrl}`, form, {
+//       headers: {
+//         ...formHeaders,
+//       },
+//     })
+//     if (status.RetCode === 0) {
+//       // 图片上传到七牛
+//       imageUrl = data.url
+//     }
+//   } catch (err) {
+//     console.log('err', err)
+//   }
+//   return imageUrl
+// }
 

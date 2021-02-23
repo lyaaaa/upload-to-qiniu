@@ -60,15 +60,17 @@ export const upImageToQiniu = async (
     putExtra,
     function (respErr: any, respBody: any, respInfo: any) {
       if (respErr) {
+        vscode.window.showInformationMessage('respErr', JSON.stringify(respErr))
         throw respErr
       }
       console.log('respBody', respBody)
 
       if (respInfo.statusCode === 200) {
+        vscode.window.showInformationMessage('uploaded', JSON.stringify(respBody))
         const url = upConfig.domain + '/' + respBody.key
         cb(url)
       } else {
-        vscode.window.showInformationMessage(`上传失败: ${respInfo.statusCode}`)
+        vscode.window.showInformationMessage('uploaded error', JSON.stringify(respBody))
       }
     }
   )
@@ -87,7 +89,6 @@ const imageGzip = async (localFile: string): Promise<any> => {
       ],
     })
   } catch (err) {
-    vscode.window.showInformationMessage('图片压缩失败')
     res = null
   }
   return res

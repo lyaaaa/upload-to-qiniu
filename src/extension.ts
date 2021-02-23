@@ -15,6 +15,7 @@ export function activate(context: vscode.ExtensionContext) {
   let texteditor = vscode.commands.registerTextEditorCommand(
     'extension.choosedImage',
     async (textEditor, edit, args) => {
+      console.log('extension.choosedImage')
       const qiniuConfig = vscode.workspace.getConfiguration('upload_qiniu_config')
       const uri = await vscode.window.showOpenDialog({
         canSelectFolders: false,

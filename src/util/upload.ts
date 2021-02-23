@@ -1,9 +1,11 @@
 const path = require('path')
-const fs = require('fs')
 const qiniu = require('qiniu')
 const imagemin = require('imagemin')
 const imageminPngquant = require('imagemin-pngquant')
 const imageminJpegtran = require('imagemin-jpegtran')
+const fs = require('fs')
+const FormData = require('form-data')
+const axios = require('axios')
 import * as vscode from 'vscode'
 import { getBufferFromFile, bufferToStream } from './base'
 
@@ -28,13 +30,13 @@ export interface QiNiuUpConfig {
 }
 
 export const upImageToQiniu = async (
-  loaclFile: string,
+  localFile: string,
   cb: { (res: any): void; (arg0: any): void },
   upConfig: QiNiuUpConfig
 ) => {
   // 将图片路径统一为 xx/xxx
-  const filePathArr = loaclFile.split(path.sep)
-  loaclFile = path.posix.join(...filePathArr)
+  const filePathArr = localFile.split(path.sep)
+  localFile = path.posix.join(...filePathArr)
 
   const config = new qiniu.conf.Config()
   const formUploader = new qiniu.form_up.FormUploader(config)
@@ -42,14 +44,14 @@ export const upImageToQiniu = async (
   const token = getToken(upConfig.accessKey, upConfig.secretKey, upConfig.scope)
   let gzipImage
   if (upConfig.gzip) {
-    gzipImage = await imageGzip(loaclFile)
+    gzipImage = await imageGzip(localFile)
   }
   // 获取当前时间戳
   var key = new Date().getTime()
   // 上传调用方法
   const uploadFnName = gzipImage ? 'putStream' : 'putFile'
   // 上传内容
-  const uploadItem = gzipImage ? bufferToStream(gzipImage) : path.normalize(loaclFile)
+  const uploadItem = gzipImage ? bufferToStream(gzipImage) : path.normalize(localFile)
   // 七牛上传
   formUploader[uploadFnName](
     token,
@@ -60,6 +62,7 @@ export const upImageToQiniu = async (
       if (respErr) {
         throw respErr
       }
+      console.log('respBody', respBody)
 
       if (respInfo.statusCode === 200) {
         const url = upConfig.domain + '/' + respBody.key
@@ -71,8 +74,8 @@ export const upImageToQiniu = async (
   )
 }
 
-const imageGzip = async (loaclFile: string): Promise<any> => {
-  const bufferFile = await getBufferFromFile(loaclFile)
+const imageGzip = async (localFile: string): Promise<any> => {
+  const bufferFile = await getBufferFromFile(localFile)
   let res
   try {
     res = await imagemin.buffer(bufferFile, {
@@ -89,3 +92,37 @@ const imageGzip = async (loaclFile: string): Promise<any> => {
   }
   return res
 }
+
+/**
+ * 处理图片（将原图或压缩后图片上传至七牛）
+ * @param localFile
+ * @param upConfig
+ */
+// export const handleImageToQiniu = async (
+//   localFile: string,
+//   upConfig: QiNiuUpConfig
+// ): Promise<string> => {
+//   let imageUrl = ''
+//   try {
+//     const reqUrl = upConfig.gzip ? 'image/compress' : 'image/upload'
+//     const form = new FormData()
+//     form.append('file', fs.createReadStream(localFile))
+//     form.append('qiniuConf', JSON.stringify(upConfig))
+//     const formHeaders = form.getHeaders()
+//     const {
+//       data: { data, status },
+//     } = await axios.post(`http://serve.lyaayl.com:3000/${reqUrl}`, form, {
+//       headers: {
+//         ...formHeaders,
+//       },
+//     })
+//     if (status.RetCode === 0) {
+//       // 图片上传到七牛
+//       imageUrl = data.url
+//     }
+//   } catch (err) {
+//     console.log('err', err)
+//   }
+//   return imageUrl
+// }
+
